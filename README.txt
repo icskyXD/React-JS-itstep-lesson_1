@@ -1,3 +1,0 @@
-first lesson React
-
-ToDoProject
