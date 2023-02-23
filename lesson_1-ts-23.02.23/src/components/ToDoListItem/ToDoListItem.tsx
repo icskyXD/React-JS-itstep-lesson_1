@@ -6,6 +6,8 @@
 // export default ToDoListItem
 
 import { Component } from 'react';
+import { ITodo } from '../../types';
+import './ToDoListItem.css'
 
 // Mutable(мутабельность) - изменение
 // State - неизменяемый (inmutable)
@@ -15,7 +17,11 @@ interface IToDoListItemState {
     important: boolean
 }
 
-export default class ToDoListItem extends Component<{ text: string }, IToDoListItemState> {
+interface IToDoListItemProps extends ITodo {
+    onDoneClick: () => void;
+}
+
+export default class ToDoListItem extends Component<IToDoListItemProps, IToDoListItemState> {
     
     state = {
         done: false,
@@ -44,8 +50,10 @@ export default class ToDoListItem extends Component<{ text: string }, IToDoListI
         })
     }
 
-    onChangeState = (nameState: string) => {
+    onChangeState = (nameState: 'done'|'important') => {
+            //@ts-ignore
         this.setState((state) => {
+            //@ts-ignore
             return {
                 [nameState]: !state[nameState]
             }
@@ -53,17 +61,20 @@ export default class ToDoListItem extends Component<{ text: string }, IToDoListI
     }
 
     render() {
-        const { text } = this.props;        
+        const { text, done, important } = this.props;    
+        
+        let classNames = '';
+        if(done) {
+            classNames += 'done';
+        }
+        if(important) {
+            classNames+='important';
+        }
         return (
-            <li 
-            style={{
-                textDecoration: this.state.done ? 'line-through':'auto',
-                fontWeight: this.state.important ? 'bold': 'normal'
-            }}
-            >
+            <li className={classNames}>
                 {text}
-                <button onClick={() => this.onDoneClick}>Done</button>
-                <button onClick={() => this.onImportantClick}>Important</button>
+                <button onClick={this.props.onDoneClick}>Done</button>
+                <button onClick={this.props.onDoneClick}>Important</button>
             </li>
         )
     }
